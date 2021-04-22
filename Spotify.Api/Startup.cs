@@ -31,6 +31,12 @@ namespace Spotify.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(options => 
+            {
+                options
+                    .AllowAnyOrigin();
+            });
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
