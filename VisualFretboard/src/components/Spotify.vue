@@ -1,16 +1,18 @@
 <template>
     <div class="spotify">
         <div class="spotify-search">
-            <input v-model="input" class="spotify-search-input">
+            <input v-model="input" class="spotify-search-input" placeholder="Search songs...">
             <button class="spotify-search-btn" @click="getTracks()">
                 <i class="fas fa-search"></i>
             </button>
         </div>
-        <div v-for="t in tracks" class="track" :key="t.id">
-            <img class="track-img" :src="t.imageUrl" alt="">
-            <div class="track-data">
-                <p class="track-name">{{t.name}}</p>
-                <p class="track-artist">{{t.artist}} - {{t.album}}</p>
+        <div class="tracks">
+            <div v-for="t in tracks" class="track" :key="t.id" @click="getTrack(t.id)">
+                <img class="track-img" :src="t.imageUrl" alt="">
+                <div class="track-data">
+                    <p class="track-name">{{t.name}}</p>
+                    <p class="track-artist">{{t.artist}} - {{t.album}}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -23,8 +25,9 @@ export default {
     name: 'Spotify',
     data() {
         return {
+            input: "",
             tracks: [],
-            input: ""
+            track: [],
         };
     },
     methods: {
@@ -32,7 +35,13 @@ export default {
             axios.get("https://localhost:5001/spotify/search?input=" + this.input)
                 .then(res => {
                     this.tracks= res.data;
-                    console.log(res.data[0].imageUrl);
+                });
+        },
+        getTrack(id) {
+            axios.get("https://localhost:5001/spotify/features?id=" + id)
+                .then(res => {
+                    this.track= res.data;
+                    console.log(res.data);
                 });
         }
     }
@@ -48,7 +57,7 @@ export default {
 }
 
 .spotify-search {
-    margin: 2rem;
+    padding: 2rem;
     display: flex;
     align-items: center;
     position: relative;
@@ -59,17 +68,32 @@ export default {
     border-radius: 20px;
     padding: 0.5rem 1rem;
     width: 100%;
+    outline: none;
+    font-family: Roboto;
+    -webkit-box-shadow: 3px 3px 9px -3px rgba(0,0,0,0.2);
+    -moz-box-shadow: 3px 3px 9px -3px rgba(0,0,0,0.2);
+    box-shadow: 3px 3px 9px -3px rgba(0,0,0,0.2);
 }
 
 .spotify-search-btn {
     position: absolute;
     right: 0;
-    margin-right: 0.3rem;
+    margin-right: 2.4rem;
     color: var(--grey-color);
     border: none;
     background-color: transparent;
     cursor: pointer;
     font-size: 1rem;
+    outline: none;
+}
+
+.tracks {
+    position: stricky;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-color: rgb(87, 87, 87) var(--grey-color);
+    scrollbar-width: thin;
+    max-height: calc(100vh - 6rem);
 }
 
 .track {
@@ -79,6 +103,7 @@ export default {
     flex-direction: row;
     align-items: center;
     cursor: pointer;
+    color: #fff;
 }
 
 .track:hover {
@@ -102,6 +127,6 @@ export default {
 
 .track-artist {
     font-size: 0.8rem;
-    color: rgb(68, 68, 68);
+    color: rgb(117, 117, 117);
 }
 </style>

@@ -1,17 +1,27 @@
 <template>
   <div class="main-wrapper">
-    <div class="main"></div>
-    <Spotify class="spotify-component" />
+    <div class="main">
+      <header class="nav">
+        <h1 class="logo">Visual Fretboard</h1>
+      </header>
+      <Fretboard/>
+      <Metronome/>
+    </div>
+    <Spotify/>
   </div>
 </template>
 
 <script>
-import Spotify from './components/Spotify'
+import Spotify from './components/Spotify';
+import Fretboard from './components/Fretboard';
+import Metronome from './components/Metronome';
 
 export default {
   name: 'App',
   components: {
-    Spotify
+    Spotify,
+    Fretboard,
+    Metronome
   }
 }
 </script>
@@ -22,7 +32,7 @@ export default {
 .main-wrapper {
   display: flex;
   flex-direction: row;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 .main {
