@@ -17,9 +17,9 @@ namespace Spotify.Api.Services
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<Track>> Search(string input, string accesToken)
+        public async Task<IEnumerable<CustomTrack>> Search(string input, string accessToken)
         {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accesToken);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             var response = await _httpClient.GetAsync($"search?q={input.Replace(" ", "+")}&type=track&limit=50");
 
@@ -29,7 +29,7 @@ namespace Spotify.Api.Services
             using var responseStream = await response.Content.ReadAsStreamAsync();
             var responseObject = await JsonSerializer.DeserializeAsync<SearchResponse>(responseStream);
 
-            return responseObject?.tracks?.items.Select(x => new Track
+            return responseObject?.tracks?.items.Select(x => new CustomTrack
             {
                 Id = x.id,
                 Name = x.name,
@@ -49,6 +49,27 @@ namespace Spotify.Api.Services
 
             using var responseStream = await response.Content.ReadAsStreamAsync();
             return await JsonSerializer.DeserializeAsync<AudioFeatures>(responseStream);
+        }
+
+        public async Task<IEnumerable<CustomTrack>> GetPlaylist(string id, string accessToken)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var response = await _httpClient.GetAsync($"playlists/{id}");
+
+            response.EnsureSuccessStatusCode();
+
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            var responseObject = await JsonSerializer.DeserializeAsync<GetPlaylistResponse>(responseStream);
+
+            return responseObject?.tracks?.items.Select(x => new CustomTrack
+            {
+                Id = x.track.id,
+                Name = x.track.name,
+                Album = x.track.album.name,
+                Artist = x.track.artists.FirstOrDefault().name,
+                ImageUrl = x.track.album.images.FirstOrDefault().url
+            });
         }
     }
 }

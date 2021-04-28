@@ -1,7 +1,10 @@
 :root {
     --primary-color: rgb(120, 190, 211);
+    --light-color: rgb(255, 255, 255);
     --grey-color: rgb(47, 47, 47);
     --dark-grey-color: rgb(148, 148, 148);
+    --dark-color: rgb(34, 34, 34);
+    /* rgba(240, 226, 210, 0.37) */
 }
 
 *,
@@ -36,43 +39,43 @@ body {
 .Tonic,
 .tonic {
   background-color: rgba(99, 219, 62, 0.8) !important;
-  color: #fff !important;
+  color: var(--light-color) !important;
 }
 
 .Supertonic,
 .supertonic {
   background-color: rgba(245, 242, 91, 0.8) !important;
-  color: #fff !important;
+  color: var(--light-color) !important;
 }
 
 .Mediant,
 .mediant {
   background-color: rgba(56, 96, 228, 0.8) !important;
-  color: #fff !important;
+  color: var(--light-color) !important;
 }
 
 .Subdominant,
 .subdominant {
   background-color: rgba(209, 127, 216, 0.8) !important;
-  color: #fff !important;
+  color: var(--light-color) !important;
 }
 
 .Dominant,
 .dominant {
   background-color: rgb(248, 37, 37, 0.8) !important;
-  color: #fff !important;
+  color: var(--light-color) !important;
 }
 
 .Submediant,
 .submediant {
   background-color: rgba(36, 184, 176, 0.8) !important;
-  color: #fff !important;
+  color: var(--light-color) !important;
 }
 
 .Leading,
 .leading {
   background-color: rgba(241, 149, 62, 0.8) !important;
-  color: #fff !important;
+  color: var(--light-color) !important;
 }
 
 .fretboard{
@@ -182,16 +185,16 @@ body {
   -webkit-box-shadow: 3px 3px 9px -3px rgba(0,0,0,0.2);
   -moz-box-shadow: 3px 3px 9px -3px rgba(0,0,0,0.2);
   box-shadow: 3px 3px 9px -3px rgba(0,0,0,0.2);
-  background-color: #fff;
-  color: rgb(120, 190, 211);
+  background-color: var(--light-color);
+  color: var(--primary-color);
   border: none;
   font-family: Roboto;
 }
 
 .nav {
-  height: 6rem;
+  height: 5rem;
   width: 100%;
-  background-color: var(--dark-grey-color);
+  background-color: var(--dark-color);
   -webkit-box-shadow: 0px 1px 3px 0px rgba(87, 86, 86, 0.45);
   -moz-box-shadow: 0px 1px 3px 0px rgba(87, 86, 86, 0.45);
   box-shadow: 0px 1px 3px 0px rgba(87, 86, 86, 0.45);
@@ -200,7 +203,7 @@ body {
 }
 
 .logo {
-  color: #fff;
+  color: var(--light-color);
   font-size: 2.3rem;
   font-family: Raleway, Roboto;
   width: 800px;

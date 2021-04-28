@@ -30,18 +30,27 @@ export default {
             track: [],
         };
     },
+    mounted() {
+        this.getPlaylist();
+    },
     methods: {
         getTracks() {
             axios.get("https://localhost:5001/spotify/search?input=" + this.input)
                 .then(res => {
-                    this.tracks= res.data;
+                    this.tracks = res.data;
                 });
         },
         getTrack(id) {
             axios.get("https://localhost:5001/spotify/features?id=" + id)
                 .then(res => {
-                    this.track= res.data;
-                    console.log(res.data);
+                    this.track = res.data;
+                    console.log(this.track);
+                });
+        },
+        getPlaylist() {
+            axios.get("https://localhost:5001/spotify/playlists?id=37i9dQZF1DWXRqgorJj26U")
+                .then(res => {
+                    this.tracks = res.data;
                 });
         }
     }
@@ -57,7 +66,7 @@ export default {
 }
 
 .spotify-search {
-    padding: 2rem;
+    padding: 1.5rem;
     display: flex;
     align-items: center;
     position: relative;
@@ -78,13 +87,14 @@ export default {
 .spotify-search-btn {
     position: absolute;
     right: 0;
-    margin-right: 2.4rem;
+    margin-right: 1.9rem;
     color: var(--grey-color);
     border: none;
     background-color: transparent;
     cursor: pointer;
     font-size: 1rem;
     outline: none;
+    margin-bottom: 1px;
 }
 
 .tracks {
@@ -93,7 +103,7 @@ export default {
     overflow-x: hidden;
     scrollbar-color: rgb(87, 87, 87) var(--grey-color);
     scrollbar-width: thin;
-    max-height: calc(100vh - 6rem);
+    max-height: calc(100vh - 5rem);
 }
 
 .track {
@@ -107,7 +117,7 @@ export default {
 }
 
 .track:hover {
-    background-color: rgb(145, 145, 145);
+    background-color: rgb(70, 68, 68);
 }
 
 .track-img {

@@ -23,7 +23,7 @@ namespace Spotify.Api.Controllers
             _configuration = configuration;
         }
 
-        public async Task<IEnumerable<Track>> Search(string input)
+        public async Task<IEnumerable<CustomTrack>> Search(string input)
         {
             var token = await _spotifyAccountService.GetAccessToken();
 
@@ -36,9 +36,18 @@ namespace Spotify.Api.Controllers
         {
             var token = await _spotifyAccountService.GetAccessToken();
 
-            var search = await _spotifyService.GetTrackFeatures(id, token);
+            var features = await _spotifyService.GetTrackFeatures(id, token);
 
-            return search;
+            return features;
+        }
+
+        public async Task<IEnumerable<CustomTrack>> Playlists(string id)
+        {
+            var token = await _spotifyAccountService.GetAccessToken();
+
+            var playlist = await _spotifyService.GetPlaylist(id, token);
+
+            return playlist;
         }
     }
 }

@@ -6,7 +6,8 @@ namespace Spotify.Api.Services
 {
     public interface ISpotifyService
     {
-        Task<IEnumerable<Track>> Search(string input, string accessToken);
-        Task<AudioFeatures> GetTrackFeatures(string id, string accesToken);
+        Task<IEnumerable<CustomTrack>> Search(string input, string accessToken);
+        Task<AudioFeatures> GetTrackFeatures(string id, string accessToken);
+        Task<IEnumerable<CustomTrack>> GetPlaylist(string id, string accessToken);
     }
 }

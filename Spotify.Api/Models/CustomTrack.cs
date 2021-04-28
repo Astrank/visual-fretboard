@@ -1,6 +1,6 @@
 ﻿namespace Spotify.Api.Models
 {
-    public class Track
+    public class CustomTrack
     {
         public string Id { get; set; }
         public string Name { get; set; }
