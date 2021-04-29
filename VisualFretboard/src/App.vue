@@ -22,7 +22,7 @@ export default {
     Spotify,
     Fretboard,
     Metronome
-  }
+  },
 }
 </script>
 

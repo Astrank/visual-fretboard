@@ -2,7 +2,7 @@
     <div class="fretboard">
         <div class="fretboard-selectors">
             <select v-model="scale.key" class="select-note" @change="createScale()">
-                <option value="null" disabled selected hidden>Note</option>
+                <option selected disabled hidden value="null">Note</option>
                 <option v-for="n in notes" 
                     :key="n" 
                     :value="n">
@@ -11,7 +11,7 @@
             </select>
 
             <select v-model="scale.name" class="select-scale" @change="createScale()">
-                <option value="null" disabled selected hidden>Scale</option>
+                <option selected disabled hidden value="null">Scale</option>
                 <option v-for="s in scales" 
                     :key="s" 
                     :value="s.name">
@@ -22,26 +22,29 @@
 
         <div class="actual-fretboard"> 
             <div class="string" 
-                v-for="string,index in fretboard.strings" 
-                :key="string">
-                <div v-for="note, indx in string" 
-                    :key="note" 
-                    :class="getFretClass(index, indx)">
-                    <div :class="fretboard.notes[note].class" 
-                        :style="{visibility: scale.notes != null && scale.notes.includes(note) ? 'visible' : 'hidden'}">
-                        <p class="note-label" :style="{visibility: fretboard.notes[note].visible ? 'visible' : 'hidden'}">{{note}}</p>
+                v-for="string, stringIndex in fretboard.strings" :key="string">
+                <div v-for="fret, fretIndex in fretboard.frets" 
+                    :key="fret" 
+                    :class="getFretClass(string, fretIndex)">
+                    <div :class="fretboard.notes[getNote(stringIndex, fretIndex)].class" 
+                        :style="{visibility: scale.notes != null && scale.notes.includes(fretboard.notes[getNote(stringIndex, fretIndex)].name) ? 'visible' : 'hidden'}">
+                        <p class="note-label" 
+                            v-show="fretboard.notes[getNote(stringIndex, fretIndex)].visible">
+                                {{fretboard.notes[getNote(stringIndex, fretIndex)].name}}
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
 
+
         <div class="degrees-container">
-            <button v-for="d in scale.degrees" 
-                :key="d" 
-                :class="d.class" 
-                :title="d.name" 
-                @click="clickDegree(d.id)">
-                    {{d.note != null ? d.note : d.symbol}}
+            <button v-for="degree, index in scale.degrees" 
+                :key="degree" 
+                :class="degree.class" 
+                :title="degree.name" 
+                @click="clickDegree(index)">
+                    {{degree.note != null ? degree.note : degree.symbol}}
             </button>
         </div>
     </div>
@@ -56,6 +59,7 @@ export default {
         return {
             /* MUSIC THEORY */
             notes: ["C", "C#", "D", "D#", "E", "F","F#", "G", "G#", "A", "A#", "B"],
+            notesTest: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
             scales: {
                 Major: {
                     name: "Major",
@@ -93,143 +97,127 @@ export default {
                 name: null,
                 pattern: null,
                 notes: null,
-                degrees: {
-                    0: {
+                degrees: [
+                    {
                         id: 0,
                         symbol: "I",
                         name: "Tonic",
                         note: null,
                         class: "degree"
                     },
-                    1: {
+                    {
                         id: 1,
                         symbol: "II",
                         name: "Supertonic",
                         note: null,
                         class: "degree"
                     },
-                    2: {
+                    {
                         id: 2,
                         symbol: "III",
                         name: "Mediant",
                         note: null,
                         class: "degree"
                     },
-                    3: {
+                    {
                         id: 3,
                         symbol: "IV",
                         name: "Subdominant",
                         note: null,
                         class: "degree"
                     },
-                    4: {
+                    {
                         id: 4,
                         symbol: "V",
                         name: "Dominant",
                         note: null,
                         class: "degree"
                     },
-                    5: {
+                    {
                         id: 5,
                         symbol: "VI",
                         name: "Submediant",
                         note: null,
                         class: "degree"
                     },
-                    6: {
+                    {
                         id: 6,
                         symbol: "VII",
                         name: "Leading",
                         note: null,
                         class: "degree"
                     }
-                },
-                test: null
+                ],
             },
 
             fretboard: {
                 frets: 17,
-                notes: {
-                    "C": {
+                strings: 6,
+                keyStrings: [4, 11, 7, 2, 9, 4],
+                notes: [
+                    {
                         name: "C",
                         class: "note C",
                         visible: false
                     },
-                    "C#": {
+                    {
                         name: "C#",
                         class: "note C#",
                         visible: false
                     },
-                    "D": {
+                    {
                         name: "D",
                         class: "note D",
                         visible: false
                     },
-                    "D#": {
+                    {
                         name: "D#",
                         class: "note D#",
                         visible: false
                     },
-                    "E": {
+                    {
                         name: "E",
                         class: "note E",
                         visible: false
                     },
-                    "F": {
+                    {
                         name: "F",
                         class: "note F",
                         visible: false
                     },
-                    "F#": {
+                    {
                         name: "F#",
                         class: "note F#",
                         visible: false
                     },
-                    "G": {
+                    {
                         name: "G",
                         class: "note G",
                         visible: false
                     },
-                    "G#": {
+                    {
                         name: "G#",
                         class: "note G#",
                         visible: false
                     },
-                    "A": {
+                    {
                         name: "A",
                         class: "note A",
                         visible: false
                     },
-                    "A#": {
+                    {
                         name: "A#",
                         class: "note A#",
                         visible: false
                     },
-                    "B": {
+                    {
                         name: "B",
                         class: "note B",
                         visible: false
                     }
-                },
-
-                strings: {
-                    1: null,
-                    2: null,
-                    3: null,
-                    4: null,
-                    5: null,
-                    6: null
-                },
+                ],
             }
         }
-    },
-    mounted() {
-        this.fretboard.strings[1] = this.getString("E");
-        this.fretboard.strings[2] = this.getString("B");
-        this.fretboard.strings[3] = this.getString("G");
-        this.fretboard.strings[4] = this.getString("D");
-        this.fretboard.strings[5] = this.getString("A");
-        this.fretboard.strings[6] = this.getString("E");
     },
     methods: {
         createScale() {
@@ -238,6 +226,21 @@ export default {
                 this.scale.notes = this.getNotes();
                 this.scale.chords = this.getChords();
             }
+
+            this.defaultLayout();
+        },
+
+        getNote(string,fret) {
+            var result = this.fretboard.keyStrings[string] + fret;
+            
+            if (result > 23) {
+                result -= 24;
+            }
+            else if (result > 11) {
+                result -= 12;
+            }
+
+            return result;
         },
 
         getNotes() {
@@ -317,23 +320,24 @@ export default {
             }
         },
 
-        clickDegree(id) {
-            if (this.scale.degrees[id].class == "degree") {
-                this.scale.degrees[id].class = "degree " + this.scale.degrees[id].name
+        clickDegree(index) {
+            if (this.scale.degrees[index].class == "degree") {
+                this.scale.degrees[index].class = "degree " + this.scale.degrees[index].name.toLowerCase();
             } 
             else {
-                this.scale.degrees[id].class = "degree"
+                this.scale.degrees[index].class = "degree"
             }
 
-            var fNote = this.fretboard.notes[this.scale.notes[id]];
+            var fNote = this.notes.indexOf(this.scale.notes[index]);
+
             
-            if (fNote.class.includes(this.scale.degrees[id].name)) {
-                fNote.class = "note " + this.scale.notes[id].name;
-                fNote.visible = false;
+            if (this.fretboard.notes[fNote].class.includes(this.scale.degrees[index].name.toLowerCase())) {
+                this.fretboard.notes[fNote].class = "note " + this.scale.notes[index].name;
+                this.fretboard.notes[fNote].visible = false;
             }
             else {
-                fNote.class += " " + this.scale.degrees[id].name; 
-                fNote.visible = true;
+                this.fretboard.notes[fNote].class += " " + this.scale.degrees[index].name.toLowerCase(); 
+                this.fretboard.notes[fNote].visible = true;
             }
         },
 
@@ -355,6 +359,19 @@ export default {
             }
 
             return result;
+        },
+
+        defaultLayout() {
+            var notes = this.fretboard.notes;
+            for (let i = 0; i < notes.length; i++) {
+                notes[i].class = `note ${notes[i].name}`;
+                notes[i].visible = false; 
+            }
+
+            var degrees = this.scale.degrees;
+            for (let i = 0; i < this.scale.degrees.length; i++) {
+                degrees[i].class = "degree"
+            }
         }
     }
 }

@@ -23,9 +23,9 @@ export default {
     name: "Metronome",
     data() {
         return {
-          bpm: 60
+          bpm: 60,
         }
-    }
+    },
 }
 </script>
 

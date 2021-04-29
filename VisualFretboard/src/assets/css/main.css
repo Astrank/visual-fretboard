@@ -36,43 +36,36 @@ body {
     font-family: Raleway, Roboto, sans-serif;
 }
 
-.Tonic,
 .tonic {
   background-color: rgba(99, 219, 62, 0.8) !important;
   color: var(--light-color) !important;
 }
 
-.Supertonic,
 .supertonic {
   background-color: rgba(245, 242, 91, 0.8) !important;
   color: var(--light-color) !important;
 }
 
-.Mediant,
 .mediant {
   background-color: rgba(56, 96, 228, 0.8) !important;
   color: var(--light-color) !important;
 }
 
-.Subdominant,
 .subdominant {
   background-color: rgba(209, 127, 216, 0.8) !important;
   color: var(--light-color) !important;
 }
 
-.Dominant,
 .dominant {
   background-color: rgb(248, 37, 37, 0.8) !important;
   color: var(--light-color) !important;
 }
 
-.Submediant,
 .submediant {
   background-color: rgba(36, 184, 176, 0.8) !important;
   color: var(--light-color) !important;
 }
 
-.Leading,
 .leading {
   background-color: rgba(241, 149, 62, 0.8) !important;
   color: var(--light-color) !important;
@@ -142,7 +135,6 @@ body {
 
 .note-label {
   text-align: center;
-  visibility: hidden;
 }
 
 .fretboard-selectors {
