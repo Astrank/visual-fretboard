@@ -31,7 +31,7 @@ export default {
         };
     },
     mounted() {
-        //this.getPlaylist();
+        this.getPlaylist();
     },
     methods: {
         getTracks() {

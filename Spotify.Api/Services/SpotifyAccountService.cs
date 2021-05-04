@@ -23,6 +23,23 @@ namespace Spotify.Api.Services
 
         public async Task<string> GetAccessToken()
         {
+            var tokenExpiryTime = _configuration["Spotify:AccessToken:ExpiryTime"];
+
+            if (tokenExpiryTime != null &&
+                DateTime.ParseExact(tokenExpiryTime, "dd/MM/yyyy H:mm:ss", null) > DateTime.Now)
+            {
+                return _configuration["Spotify:AccessToken:Token"];
+            }
+            else
+            {
+                await NewAccessToken();
+
+                return _configuration["Spotify:AccessToken:Token"];
+            }
+        }
+
+        public async Task NewAccessToken()
+        {
             var request = new HttpRequestMessage(HttpMethod.Post, "token");
 
             request.Headers.Authorization = new AuthenticationHeaderValue(
@@ -42,7 +59,10 @@ namespace Spotify.Api.Services
             using var responseStream = await response.Content.ReadAsStreamAsync();
             var authResult = await JsonSerializer.DeserializeAsync<AccessToken>(responseStream);
 
-            return authResult.access_token;
+            var epiryTime = DateTime.Now.AddSeconds(authResult.expires_in);
+
+            _configuration["Spotify:AccessToken:Token"] = authResult.access_token;
+            _configuration["Spotify:AccessToken:ExpiryTime"] = epiryTime.ToString();
         }
     }
 }

@@ -20,9 +20,7 @@ namespace Spotify.Api.Services
         public async Task<IEnumerable<CustomTrack>> Search(string input, string accessToken)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
             var response = await _httpClient.GetAsync($"search?q={input.Replace(" ", "+")}&type=track&limit=50");
-
             
             response.EnsureSuccessStatusCode();
 
