@@ -32,7 +32,7 @@ export default {
 .main-wrapper {
   display: flex;
   flex-direction: row;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .main {

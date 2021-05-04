@@ -7,6 +7,8 @@ using Spotify.Api.Services;
 
 namespace Spotify.Api.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class SpotifyController : ControllerBase
     {
         private readonly ISpotifyAccountService _spotifyAccountService;
@@ -23,6 +25,7 @@ namespace Spotify.Api.Controllers
             _configuration = configuration;
         }
 
+        [HttpGet("{action}/{input}")]
         public async Task<IEnumerable<CustomTrack>> Search(string input)
         {
             var token = await _spotifyAccountService.GetAccessToken();
@@ -32,6 +35,7 @@ namespace Spotify.Api.Controllers
             return search;
         }
 
+        [HttpGet("{action}/{id}")]
         public async Task<AudioFeatures> Features(string id)
         {
             var token = await _spotifyAccountService.GetAccessToken();
@@ -41,6 +45,7 @@ namespace Spotify.Api.Controllers
             return features;
         }
 
+        [HttpGet("{action}/{id}")]
         public async Task<IEnumerable<CustomTrack>> Playlists(string id)
         {
             var token = await _spotifyAccountService.GetAccessToken();

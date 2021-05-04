@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
 
 export default {
     name: 'Spotify',
@@ -31,24 +31,25 @@ export default {
         };
     },
     mounted() {
-        this.getPlaylist();
+        //this.getPlaylist();
     },
     methods: {
         getTracks() {
-            axios.get("https://localhost:5001/spotify/search?input=" + this.input)
+            axios.get("https://localhost:5001/spotify/search/" + this.input)
                 .then(res => {
                     this.tracks = res.data;
                 });
         },
         getTrack(id) {
-            axios.get("https://localhost:5001/spotify/features?id=" + id)
+            axios.get("https://localhost:5001/spotify/features/" + id)
                 .then(res => {
                     this.track = res.data;
-                    console.log(this.track);
+                    this.$store.commit('setTrack', res.data);
                 });
+
         },
         getPlaylist() {
-            axios.get("https://localhost:5001/spotify/playlists?id=37i9dQZF1DWXRqgorJj26U")
+            axios.get("https://localhost:5001/spotify/playlists/37i9dQZF1DWXRqgorJj26U")
                 .then(res => {
                     this.tracks = res.data;
                 });

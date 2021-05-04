@@ -1,21 +1,21 @@
 <template>
-        <div class="metronome">
-            <h1>METRONOME</h1>
-            <div class="metronome-bpm-controlls">
-              <a class="metronome-minus" v-on:click="bpm--">
-                <i class="fas fa-minus-circle"></i>
-              </a>
-              <input id="tempo" class="metronome-range" type="range" v-model="bpm" min="20" max="300" onchange="metronomeApp.setTempo(this.value);">
-              <a class="metronome-plus" v-on:click="bpm++">
-                <i class="fas fa-plus-circle"></i>
-              </a>
-              <input class="metronome-bpm" v-model="bpm" type="number">
-            </div>
-            <a href="" class="metronome-play">
-              <i class="far fa-play-circle"></i>
-            </a>
-            <!--<input id="metronome" class="metronome-timer" type="button" value="Start" onclick="metronomeApp.toggle()">-->
-        </div>
+  <div class="metronome">
+      <h1>METRONOME</h1>
+      <div class="metronome-bpm-controlls">
+        <a class="metronome-minus" v-on:click="this.$store.state.tempo--">
+          <i class="fas fa-minus-circle"></i>
+        </a>
+        <input class="metronome-range" type="range" v-model="this.$store.state.tempo" min="20" max="300">
+        <a class="metronome-plus" v-on:click="this.$store.state.tempo++">
+          <i class="fas fa-plus-circle"></i>
+        </a>
+        <input class="metronome-bpm" v-model="this.$store.state.tempo" type="number">
+      </div>
+      <a class="metronome-play" @click="toggle()">
+        <i v-if="playing" class="far fa-pause-circle"></i>
+        <i v-else class="far fa-play-circle"></i>
+      </a>
+  </div>
 </template>
 
 <script>
@@ -23,9 +23,51 @@ export default {
     name: "Metronome",
     data() {
         return {
-          bpm: 60,
+          playing: false,
+          audioContext: null,
+          audioBuffer: null,
+          currentTime: null
         }
     },
+    computed: {
+      getTempo() {
+        return this.$store.state.tempo;
+      }
+    },
+    mounted() {
+      this.initContext();
+    },
+    methods: {
+      toggle() {
+        if (!this.playing) {
+            this.currentTime = this.audioContext.currentTime;
+            this.playing = true;
+            this.play();
+        } else {
+            this.playing = false;
+        }
+      },
+
+      play() {
+        this.currentTime += 60 / this.$store.state.tempo;
+
+        const source = this.audioContext.createBufferSource();
+        source.buffer = this.audioBuffer;
+        source.connect(this.audioContext.destination);
+        source.onended = this.playing ? this.play : "";
+        source.start(this.currentTime);
+      },
+
+      async initContext() {
+        this.audioContext = new AudioContext();
+
+        this.audioBuffer = await fetch("click.wav")
+            .then(res => res.arrayBuffer())
+            .then(arrayBuffer => 
+              this.audioContext.decodeAudioData(arrayBuffer)
+            )
+      }
+    }
 }
 </script>
 
@@ -95,5 +137,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 </style>

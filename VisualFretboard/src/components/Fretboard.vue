@@ -1,36 +1,36 @@
 <template>
     <div class="fretboard">
         <div class="fretboard-selectors">
-            <select v-model="scale.key" class="select-note" @change="createScale()">
+            <select v-model="this.$store.state.key" class="select-note" @change="createScale()">
                 <option selected disabled hidden value="null">Note</option>
-                <option v-for="n in notes" 
-                    :key="n" 
-                    :value="n">
-                        {{n}}
+                <option v-for="note,noteIndex in notes" 
+                    :key="note" 
+                    :value="noteIndex">
+                        {{note.name}}
                 </option>
             </select>
 
-            <select v-model="scale.name" class="select-scale" @change="createScale()">
+            <select v-model="this.$store.state.mode" class="select-scale" @change="createScale()">
                 <option selected disabled hidden value="null">Scale</option>
-                <option v-for="s in scales" 
-                    :key="s" 
-                    :value="s.name">
-                        {{s.name}}
+                <option v-for="scale,scaleIndex in scales" 
+                    :key="scale" 
+                    :value="scaleIndex">
+                        {{scale.name}}
                 </option>
             </select>
         </div>
 
         <div class="actual-fretboard"> 
             <div class="string" 
-                v-for="string, stringIndex in fretboard.strings" :key="string">
-                <div v-for="fret, fretIndex in fretboard.frets" 
+                v-for="string, stringIndex in strings" :key="string">
+                <div v-for="fret, fretIndex in frets" 
                     :key="fret" 
                     :class="getFretClass(string, fretIndex)">
-                    <div :class="fretboard.notes[getNote(stringIndex, fretIndex)].class" 
-                        :style="{visibility: scale.notes != null && scale.notes.includes(fretboard.notes[getNote(stringIndex, fretIndex)].name) ? 'visible' : 'hidden'}">
+                    <div :class="notes[getNote(stringIndex, fretIndex)].class" 
+                        :style="{visibility: scale.notes != null && scale.notes.includes(getNote(stringIndex, fretIndex)) ? 'visible' : 'hidden'}">
                         <p class="note-label" 
-                            v-show="fretboard.notes[getNote(stringIndex, fretIndex)].visible">
-                                {{fretboard.notes[getNote(stringIndex, fretIndex)].name}}
+                            v-show="notes[getNote(stringIndex, fretIndex)].visible">
+                                {{notes[getNote(stringIndex, fretIndex)].name}}
                         </p>
                     </div>
                 </div>
@@ -57,44 +57,106 @@ export default {
     name: 'Fretboard',
     data() {
         return {
-            /* MUSIC THEORY */
-            notes: ["C", "C#", "D", "D#", "E", "F","F#", "G", "G#", "A", "A#", "B"],
-            notesTest: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-            scales: {
-                Major: {
+            scales: [
+                {
                     name: "Major",
                     pattern: [2, 2, 1, 2, 2, 2]
                 },
-                Dorian: {
+                {
                     name: "Dorian",
                     pattern: [2, 1, 2, 2, 2, 1]
                 },
-                Phrygian: {
+                {
                     name: "Prygian",
                     pattern: [1, 2, 2, 2, 1, 2]
                 },
-                Lydian: {
+                {
                     name: "Lydian",
                     pattern: [2, 2, 2, 1, 2, 2],
                 },
-                Mixolydian: {
+                {
                     name: "Mixolydian",
                     pattern: [2, 2, 1, 2, 2, 1],
                 },
-                Minor: {
+                {
                     name: "Minor",
                     pattern: [2, 1, 2, 2, 1, 2],
                 },
-                Locrian: {
+                {
                     name: "Locrian",
                     pattern: [1, 2, 2, 1, 2, 2]
                 }
-            },
+            ],
+            notes: [
+                {
+                    name: "C",
+                    class: "note C",
+                    visible: false
+                },
+                {
+                    name: "C#",
+                    class: "note C#",
+                    visible: false
+                },
+                {
+                    name: "D",
+                    class: "note D",
+                    visible: false
+                },
+                {
+                    name: "D#",
+                    class: "note D#",
+                    visible: false
+                },
+                {
+                    name: "E",
+                    class: "note E",
+                    visible: false
+                },
+                {
+                    name: "F",
+                    class: "note F",
+                    visible: false
+                },
+                {
+                    name: "F#",
+                    class: "note F#",
+                    visible: false
+                },
+                {
+                    name: "G",
+                    class: "note G",
+                    visible: false
+                },
+                {
+                    name: "G#",
+                    class: "note G#",
+                    visible: false
+                },
+                {
+                    name: "A",
+                    class: "note A",
+                    visible: false
+                },
+                {
+                    name: "A#",
+                    class: "note A#",
+                    visible: false
+                },
+                {
+                    name: "B",
+                    class: "note B",
+                    visible: false
+                }
+            ],
+            frets: 17,
+            strings: 6,
+            stringNotes: [4, 11, 7, 2, 9, 4],
 
             /* USER SCALE */
             scale: {
-                key: null,
-                name: null,
+                name: this.$store.state.mode,
+                key: this.$store.state.key,
                 pattern: null,
                 notes: null,
                 degrees: [
@@ -149,80 +211,23 @@ export default {
                     }
                 ],
             },
-
-            fretboard: {
-                frets: 17,
-                strings: 6,
-                keyStrings: [4, 11, 7, 2, 9, 4],
-                notes: [
-                    {
-                        name: "C",
-                        class: "note C",
-                        visible: false
-                    },
-                    {
-                        name: "C#",
-                        class: "note C#",
-                        visible: false
-                    },
-                    {
-                        name: "D",
-                        class: "note D",
-                        visible: false
-                    },
-                    {
-                        name: "D#",
-                        class: "note D#",
-                        visible: false
-                    },
-                    {
-                        name: "E",
-                        class: "note E",
-                        visible: false
-                    },
-                    {
-                        name: "F",
-                        class: "note F",
-                        visible: false
-                    },
-                    {
-                        name: "F#",
-                        class: "note F#",
-                        visible: false
-                    },
-                    {
-                        name: "G",
-                        class: "note G",
-                        visible: false
-                    },
-                    {
-                        name: "G#",
-                        class: "note G#",
-                        visible: false
-                    },
-                    {
-                        name: "A",
-                        class: "note A",
-                        visible: false
-                    },
-                    {
-                        name: "A#",
-                        class: "note A#",
-                        visible: false
-                    },
-                    {
-                        name: "B",
-                        class: "note B",
-                        visible: false
-                    }
-                ],
-            }
         }
+    },
+    watch: {
+        '$store.state.key'(){
+            this.createScale();
+        },
+        '$store.state.mode'(){
+            this.createScale();
+        }
+    },
+    mounted() {
+        this.createScale();
     },
     methods: {
         createScale() {
-            if (this.scale.key != null && this.scale.name != null) {
-                this.scale.pattern = this.scales[this.scale.name].pattern;
+            if (this.$store.state.key != null && this.$store.state.mode != null) {
+                this.scale.pattern = this.scales[this.$store.state.mode].pattern;
                 this.scale.notes = this.getNotes();
                 this.scale.chords = this.getChords();
             }
@@ -230,8 +235,9 @@ export default {
             this.defaultLayout();
         },
 
+        /* Returns the corresponding note to the specified string and fret */
         getNote(string,fret) {
-            var result = this.fretboard.keyStrings[string] + fret;
+            var result = this.stringNotes[string] + fret;
             
             if (result > 23) {
                 result -= 24;
@@ -243,16 +249,17 @@ export default {
             return result;
         },
 
+        /* Takes the scale key and based on the scale pattern returns all notes of the scale */
         getNotes() {
-            var keyIndex = this.notes.indexOf(this.scale.key);
-            var result = [this.notes[keyIndex]];
+            var index = this.$store.state.key;
+            var result = [index];
 
             for (let i = 0; i < (this.scale.pattern.length); i++) {
-                keyIndex += this.scale.pattern[i];
-                if(keyIndex > 11){
-                    keyIndex -= 12;
+                index += this.scale.pattern[i];
+                if(index > 11){
+                    index -= 12;
                 }
-                result.push(this.notes[keyIndex]);
+                result.push(index);
             }
 
             return result;
@@ -273,37 +280,22 @@ export default {
                     }
                     chord.push(this.scale.notes[index]);
                 }
-                var firstThird = this.thirdDetector(this.notes.indexOf(chord[0]), this.notes.indexOf(chord[1]));
-                var secondThird = this.thirdDetector(this.notes.indexOf(chord[1]), this.notes.indexOf(chord[2]));
-                
+
+                var firstThird = this.thirdDetector(chord[0], chord[1]);
+                var secondThird = this.thirdDetector(chord[1], chord[2]);
+
                 if (firstThird == "minor" && secondThird == "minor") {
-                    this.scale.degrees[i].note = (chord[0] + "dim");
+                    this.scale.degrees[i].note = (this.notes[chord[0]].name + "dim");
                 }
                 else if (firstThird == "minor" && secondThird == "major") {
-                    this.scale.degrees[i].note = (chord[0].toLowerCase());
+                    this.scale.degrees[i].note = (this.notes[chord[0]].name.toLowerCase());
                 }
                 else if (firstThird == "major" && secondThird == "minor") {
-                    this.scale.degrees[i].note = (chord[0]);
+                    this.scale.degrees[i].note = (this.notes[chord[0]].name);
                 }
                 else if (firstThird == "major" && secondThird == "major") {
-                    this.scale.degrees[i].note = (chord[0] + "aug");
+                    this.scale.degrees[i].note = (this.notes[chord[0]].name + "aug");
                 }
-            }
-
-            return result;
-        },
-
-        getString(note){
-            var index = this.notes.indexOf(note);
-            var result = [this.notes[index]];
-
-            for (let i = 1; i < this.fretboard.frets; i++) {
-                index += 1;
-
-                if (index > 11) {
-                    index -= 12;
-                }
-                result.push(this.notes[index]);
             }
 
             return result;
@@ -328,19 +320,19 @@ export default {
                 this.scale.degrees[index].class = "degree"
             }
 
-            var fNote = this.notes.indexOf(this.scale.notes[index]);
-
+            var fNote = this.scale.notes[index];
             
-            if (this.fretboard.notes[fNote].class.includes(this.scale.degrees[index].name.toLowerCase())) {
-                this.fretboard.notes[fNote].class = "note " + this.scale.notes[index].name;
-                this.fretboard.notes[fNote].visible = false;
+            if (this.notes[fNote].class.includes(this.scale.degrees[index].name.toLowerCase())) {
+                this.notes[fNote].class = "note " + this.scale.notes[index].name;
+                this.notes[fNote].visible = false;
             }
             else {
-                this.fretboard.notes[fNote].class += " " + this.scale.degrees[index].name.toLowerCase(); 
-                this.fretboard.notes[fNote].visible = true;
+                this.notes[fNote].class += " " + this.scale.degrees[index].name.toLowerCase(); 
+                this.notes[fNote].visible = true;
             }
         },
 
+        /* Returns fret class based on the specified string and fret position */
         getFretClass(stringIndex, fretIndex) {
             var result = "fret";
 
@@ -350,7 +342,7 @@ export default {
             else if (fretIndex == 1) {
                 result += " first";
             }
-            else if(fretIndex == this.fretboard.frets - 1) {
+            else if(fretIndex == this.frets - 1) {
                 result += " last";
             }
             
@@ -362,7 +354,7 @@ export default {
         },
 
         defaultLayout() {
-            var notes = this.fretboard.notes;
+            var notes = this.notes;
             for (let i = 0; i < notes.length; i++) {
                 notes[i].class = `note ${notes[i].name}`;
                 notes[i].visible = false; 
@@ -372,6 +364,10 @@ export default {
             for (let i = 0; i < this.scale.degrees.length; i++) {
                 degrees[i].class = "degree"
             }
+
+            notes[this.scale.notes[0]].class = `note ${notes[this.scale.notes[0]].name} tonic`;
+            notes[this.scale.notes[0]].visible = true; 
+            degrees[0].class = "degree tonic";
         }
     }
 }

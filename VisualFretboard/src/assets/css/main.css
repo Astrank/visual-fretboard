@@ -142,7 +142,7 @@ body {
   flex-direction: row;
   margin: 1rem 0;
   gap: 0.5rem;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .select-note,
@@ -154,6 +154,11 @@ body {
   border: hidden;
   display: block;
   min-width: 64px;
+}
+
+.select-note:focus,
+.select-scale:focus {
+  outline: none;
 }
 
 .degrees-container {
