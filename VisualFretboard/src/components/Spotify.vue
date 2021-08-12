@@ -25,15 +25,26 @@ export default {
     name: 'Spotify',
     data() {
         return {
+            accessToken: null,
+            expiryTime: null,
             input: "",
             tracks: [],
             track: [],
         };
     },
     mounted() {
-        this.getPlaylist();
+        this.requestAccessToken();
+        //this.netlify();
     },
     methods: {
+        requestAccessToken() {
+            axios.get("/.netlify/functions/request-access-token")
+                .then(res => {
+                    console.log(res.data);
+                    //this.accessToken = res.data.access_token;
+                    //this.expiryTime = Date.now() + res.data.expires_in;
+                });
+        },
         getTracks() {
             axios.get("https://localhost:5001/spotify/search/" + this.input)
                 .then(res => {
@@ -46,7 +57,6 @@ export default {
                     this.track = res.data;
                     this.$store.commit('setTrack', res.data);
                 });
-
         },
         getPlaylist() {
             axios.get("https://localhost:5001/spotify/playlists/37i9dQZF1DWXRqgorJj26U")
