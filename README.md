@@ -1,6 +1,6 @@
 # Visual Fretboard
 
-Visual Fretboard is an interactive guitar fretboard that helps visualize notes, scales, and chords. Built with Vue and implemented in Netlify.
+Visual Fretboard is an interactive guitar fretboard that helps visualize notes, scales, and chords. Built with Vue and deployed in Netlify.
 
 ## Project setup
 ```
