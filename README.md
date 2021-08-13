@@ -1,4 +1,6 @@
-# visual_fretboard
+# Visual Fretboard
+
+Visual Fretboard is an interactive guitar fretboard that helps visualize notes, scales, and chords. Built with Vue and implemented in Netlify.
 
 ## Project setup
 ```
@@ -14,11 +16,3 @@ npm run serve
 ```
 npm run build
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
