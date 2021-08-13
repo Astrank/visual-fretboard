@@ -1,5 +1,5 @@
 <template>
-  <div class="main-wrapper">
+  <div class="main-wrapper" v-show="!this.$store.state.loading">
     <div class="main">
       <header class="nav">
         <h1 class="logo">Visual Fretboard</h1>
@@ -8,6 +8,9 @@
       <Metronome/>
     </div>
     <Spotify/>
+  </div>
+  <div class="loading" v-show="this.$store.state.loading">
+    <i class="fas fa-guitar guitar"></i>
   </div>
 </template>
 
@@ -39,4 +42,25 @@ export default {
   height: 100%;
   width: 100%;
 }
+
+.loading {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+.guitar {
+  font-size: 4em;
+  color: var(--light-color);
+  margin: auto;
+  align-self: center;
+  justify-self: center;
+  -webkit-animation:spin 4s linear infinite;
+  -moz-animation:spin 4s linear infinite;
+  animation:spin 4s linear infinite;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 </style>

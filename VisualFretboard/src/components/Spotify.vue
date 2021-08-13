@@ -2,16 +2,16 @@
     <div class="spotify">
         <div class="spotify-search">
             <input v-model="input" class="spotify-search-input" placeholder="Search songs...">
-            <button class="spotify-search-btn" @click="getTracks()">
+            <button class="spotify-search-btn" @click="searchTrack()">
                 <i class="fas fa-search"></i>
             </button>
         </div>
         <div class="tracks">
             <div v-for="t in tracks" class="track" :key="t.id" @click="getTrack(t.id)">
-                <img class="track-img" :src="t.imageUrl" alt="">
+                <img class="track-img" :src="t.album.images[2].url" alt="">
                 <div class="track-data">
                     <p class="track-name">{{t.name}}</p>
-                    <p class="track-artist">{{t.artist}} - {{t.album}}</p>
+                    <p class="track-artist">{{t.artists[0].name}} - {{t.album.name}}</p>
                 </div>
             </div>
         </div>
@@ -25,44 +25,59 @@ export default {
     name: 'Spotify',
     data() {
         return {
-            accessToken: null,
+            accessToken: [],
             expiryTime: null,
             input: "",
             tracks: [],
             track: [],
         };
     },
-    mounted() {
-        this.requestAccessToken();
-        //this.netlify();
+    created() {
+        this.getPlaylist();
     },
     methods: {
-        requestAccessToken() {
-            axios.get("/.netlify/functions/request-access-token")
+        async newAccessToken() {
+            await axios
+                .get("/.netlify/functions/new-access-token")
                 .then(res => {
-                    console.log(res.data);
-                    //this.accessToken = res.data.access_token;
-                    //this.expiryTime = Date.now() + res.data.expires_in;
+                    this.accessToken = res.data.accessToken;
+                    this.expiryTime = Date.now() + res.data.accessToken.expires_in;
+                })
+                .catch((error) => {
+                    console.error(error);
                 });
         },
-        getTracks() {
-            axios.get("https://localhost:5001/spotify/search/" + this.input)
+        async searchTrack() {
+            await this.getAccessToken();
+            await axios.get(`/.netlify/functions/search-track?token=${this.accessToken.access_token}&input=${this.input.replaceAll(" ", "+")}`)
                 .then(res => {
-                    this.tracks = res.data;
+                    this.tracks = res.data.tracks.tracks.items;
                 });
         },
-        getTrack(id) {
-            axios.get("https://localhost:5001/spotify/features/" + id)
+        async getTrack(id) {
+            await this.getAccessToken();
+
+            await axios.get(`/.netlify/functions/get-track?token=${this.accessToken.access_token}&id=${id}`)
                 .then(res => {
-                    this.track = res.data;
-                    this.$store.commit('setTrack', res.data);
+                    this.track = res.data.track;
+                    this.$store.commit('setTrack', res.data.track);
                 });
         },
-        getPlaylist() {
-            axios.get("https://localhost:5001/spotify/playlists/37i9dQZF1DWXRqgorJj26U")
+        async getPlaylist() {
+            await this.getAccessToken();
+            var playlist = "37i9dQZF1DWXRqgorJj26U";
+
+            await axios
+                .get(`/.netlify/functions/get-playlist?token=${this.accessToken.access_token}&playlist=${playlist}`)
                 .then(res => {
-                    this.tracks = res.data;
+                    this.tracks = res.data.playlist.tracks.items.map(t => t.track);
                 });
+            this.$store.state.loading = false;
+        },
+        async getAccessToken() {
+            if(this.expiryTime == null || this.expiryTime < Date.now()) {
+                await this.newAccessToken();
+            }
         }
     }
 }
@@ -74,6 +89,12 @@ export default {
     width: 25rem;
     display: flex;
     flex-direction: column;
+}
+
+@media only screen and (max-width:1150px) {
+    .spotify {
+        display: none;
+    }
 }
 
 .spotify-search {

@@ -89,6 +89,13 @@ export default {
   justify-content: center;
 }
 
+@media only screen and (max-width:800px) {
+    .metronome {
+      width: 100%;
+      max-width: none;
+    }
+}
+
 .metronome h1 {
   font-weight: 500;
   font-size: 1.8rem;

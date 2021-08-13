@@ -1,6 +1,6 @@
 const { default: axios } = require("axios");
 const { access } = require("fs");
-const querystring = require('querystring');
+const qs = require('querystring');
 
 
 exports.handler = async function(event, context) {
@@ -10,7 +10,7 @@ exports.handler = async function(event, context) {
     try {
         var accessToken = await axios.post(
             "https://accounts.spotify.com/api/token",
-            querystring.stringify({
+            qs.stringify({
                 grant_type: 'client_credentials',
             }),{
                 headers: {
@@ -18,11 +18,11 @@ exports.handler = async function(event, context) {
                 'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }
-        )
+        ).then(res => { return res.data })
 
         return {
             statusCode: 200,
-            body: JSON.stringify({accessToken: accessToken.data})
+            body: JSON.stringify({accessToken: accessToken})
         }
     } catch (error) {
         return {
