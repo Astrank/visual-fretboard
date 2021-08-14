@@ -8,7 +8,7 @@ Visual Fretboard is an interactive guitar fretboard that helps to visualize note
 
 * Interactive fretboard
 * Metronome
-* Consumes Spotify API to get the tempo and tonality of any song.
+* Get the tempo and tonality of any song using Spotify API.
 
 ## Project setup
 ```
